@@ -387,4 +387,280 @@ export default function GenerateQRPage() {
                   whiteSpace: 'nowrap',
                 }}
               >
-                {copied ? '✓ คัดล
+                {copied ? '✓ คัดลอกแล้ว' : 'คัดลอกลิงก์'}
+              </button>
+            </div>
+
+            {/* ปุ่มเปิดโต๊ะใหม่ */}
+            <button
+              type="button"
+              onClick={handleResetForm}
+              style={{
+                width: '100%',
+                padding: '16px',
+                fontSize: '1.25rem',
+                fontWeight: 'bold',
+                backgroundColor: '#d32f2f',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '12px',
+                cursor: 'pointer',
+              }}
+            >
+              + เปิดโต๊ะใหม่
+            </button>
+          </div>
+        ) : (
+          /* ฟอร์มกรอกข้อมูลเปิดโต๊ะ */
+          <form
+            onSubmit={handleOpenTable}
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '16px',
+              padding: '24px 20px',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+            }}
+          >
+            {/* ช่อง 1: เลขโต๊ะ */}
+            <div style={{ marginBottom: '20px' }}>
+              <label
+                htmlFor="tableNumber"
+                style={{
+                  display: 'block',
+                  fontSize: '1.25rem',
+                  fontWeight: 'bold',
+                  color: '#212121',
+                  marginBottom: '8px',
+                }}
+              >
+                เลขโต๊ะ
+              </label>
+              <input
+                id="tableNumber"
+                type="number"
+                inputMode="numeric"
+                min="1"
+                required
+                placeholder="เช่น 7"
+                value={tableNumber}
+                onChange={(e) => {
+                  setTableNumber(e.target.value);
+                  if (existingSession) setExistingSession(null);
+                }}
+                style={{
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  padding: '14px 16px',
+                  fontSize: '1.5rem',
+                  fontWeight: 'bold',
+                  border: '2px solid #bdbdbd',
+                  borderRadius: '10px',
+                }}
+              />
+            </div>
+
+            {/* ช่อง 2 & 3: จำนวนผู้ใหญ่ และ จำนวนเด็ก */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '16px',
+                marginBottom: '28px',
+              }}
+            >
+              <div>
+                <label
+                  htmlFor="adultCount"
+                  style={{
+                    display: 'block',
+                    fontSize: '1.2rem',
+                    fontWeight: 'bold',
+                    color: '#212121',
+                    marginBottom: '8px',
+                  }}
+                >
+                  จำนวนผู้ใหญ่
+                </label>
+                <input
+                  id="adultCount"
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  required
+                  value={adultCount}
+                  onChange={(e) => setAdultCount(e.target.value)}
+                  style={{
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    padding: '14px 16px',
+                    fontSize: '1.4rem',
+                    fontWeight: 'bold',
+                    border: '2px solid #bdbdbd',
+                    borderRadius: '10px',
+                  }}
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="childCount"
+                  style={{
+                    display: 'block',
+                    fontSize: '1.2rem',
+                    fontWeight: 'bold',
+                    color: '#212121',
+                    marginBottom: '8px',
+                  }}
+                >
+                  จำนวนเด็ก
+                </label>
+                <input
+                  id="childCount"
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  required
+                  value={childCount}
+                  onChange={(e) => setChildCount(e.target.value)}
+                  style={{
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    padding: '14px 16px',
+                    fontSize: '1.4rem',
+                    fontWeight: 'bold',
+                    border: '2px solid #bdbdbd',
+                    borderRadius: '10px',
+                  }}
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: '100%',
+                padding: '16px',
+                fontSize: '1.35rem',
+                fontWeight: 'bold',
+                backgroundColor: loading ? '#9e9e9e' : '#d32f2f',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '12px',
+                cursor: loading ? 'not-allowed' : 'pointer',
+              }}
+            >
+              {loading ? 'กำลังตรวจสอบ...' : 'เปิดโต๊ะ'}
+            </button>
+          </form>
+        )}
+      </div>
+
+      {/* Confirm Dialog สำหรับยืนยันปิดโต๊ะเดิม */}
+      {showConfirmModal && existingSession && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.65)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '16px',
+              padding: '24px',
+              maxWidth: '440px',
+              width: '100%',
+              border: '3px solid #d32f2f',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+            }}
+          >
+            <h2
+              style={{
+                fontSize: '1.45rem',
+                color: '#b71c1c',
+                marginTop: 0,
+                marginBottom: '16px',
+              }}
+            >
+              ⚠️ ยืนยันการปิดโต๊ะเดิม
+            </h2>
+
+            <div
+              style={{
+                backgroundColor: '#ffebee',
+                padding: '16px',
+                borderRadius: '10px',
+                marginBottom: '20px',
+                fontSize: '1.2rem',
+                color: '#212121',
+                lineHeight: 1.6,
+              }}
+            >
+              <div>
+                <strong>เลขโต๊ะ:</strong> โต๊ะ {existingSession.table_number}
+              </div>
+              <div>
+                <strong>จำนวนลูกค้า:</strong> ผู้ใหญ่ {existingSession.adult_count} · เด็ก{' '}
+                {existingSession.child_count}
+              </div>
+              <div style={{ color: '#c62828', fontWeight: 'bold', marginTop: '4px' }}>
+                ⏱ เปิดมาแล้ว {getElapsedMinutes(existingSession.created_at)} นาที
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '12px',
+              }}
+            >
+              <button
+                type="button"
+                disabled={closingOld}
+                onClick={() => setShowConfirmModal(false)}
+                style={{
+                  padding: '14px',
+                  fontSize: '1.15rem',
+                  fontWeight: 'bold',
+                  backgroundColor: '#e0e0e0',
+                  color: '#212121',
+                  border: 'none',
+                  borderRadius: '10px',
+                  cursor: closingOld ? 'not-allowed' : 'pointer',
+                }}
+              >
+                ยกเลิก
+              </button>
+
+              <button
+                type="button"
+                disabled={closingOld}
+                onClick={handleConfirmCloseOldSession}
+                style={{
+                  padding: '14px',
+                  fontSize: '1.15rem',
+                  fontWeight: 'bold',
+                  backgroundColor: closingOld ? '#9e9e9e' : '#d32f2f',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '10px',
+                  cursor: closingOld ? 'not-allowed' : 'pointer',
+                }}
+              >
+                {closingOld ? 'กำลังปิด...' : 'ยืนยันปิดโต๊ะเดิม'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </main>
+  );
+}
